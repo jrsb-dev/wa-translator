@@ -1,0 +1,28 @@
+.translate-btn {
+  transition: all 0.2s ease;
+}
+
+.translate-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+}
+
+.translation-container {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.translation-container button:hover {
+  background: #20b558 !important;
+  transform: scale(1.02);
+}

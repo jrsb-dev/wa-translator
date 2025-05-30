@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      margin: 0;
+      color: #25d366;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus, select:focus {
+      outline: none;
+      border-color: #25d366;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #25d366;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #20b558;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .link {
+      color: #25d366;
+      text-decoration: none;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌐 WhatsApp Translator</h1>
+  </div>
+
+  <form id="settingsForm">
+    <div class="form-group">
+      <label for="apiKey">OpenAI API Key:</label>
+      <input type="password" id="apiKey" placeholder="sk-..." required>
+      <div class="help-text">
+        Je kunt een API key krijgen op <a href="https://platform.openai.com/api-keys" class="link" target="_blank">platform.openai.com</a>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="targetLanguage">Doeltaal:</label>
+      <select id="targetLanguage" required>
+        <option value="Nederlands">Nederlands</option>
+        <option value="Engels">Engels</option>
+        <option value="Duits">Duits</option>
+        <option value="Frans">Frans</option>
+        <option value="Spaans">Spaans</option>
+        <option value="Italiaans">Italiaans</option>
+        <option value="Portugees">Portugees</option>
+        <option value="Russisch">Russisch</option>
+        <option value="Chinees">Chinees</option>
+        <option value="Japans">Japans</option>
+      </select>
+    </div>
+
+    <button type="submit" id="saveBtn">Instellingen opslaan</button>
+  </form>
+
+  <div id="status" class="status" ></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
