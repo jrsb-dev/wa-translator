@@ -130,6 +130,16 @@ class WhatsAppTranslator {
     }
   }
 
+  parseHTMLToText(html) {
+    return html
+      .replace(/<p[^>]*>/g, '')  // Verwijder opening <p> tags
+      .replace(/<\/p>/g, '\n') // Vervang closing </p> tags door dubbele newlines
+      .replace(/<br\s*\/?>/g, '\n') // Vervang <br> tags door enkele newlines
+      .replace(/<[^>]+>/g, '')   // Verwijder alle overige HTML tags
+      .replace(/\n{3,}/g, '\n\n')  // Vervang 3 of meer newlines door 2 newlines
+      .trim();
+  }
+
   async callChatGPT(text, targetLanguage, apiKey) {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -142,7 +152,9 @@ class WhatsAppTranslator {
         messages: [
           {
             role: 'system',
-            content: `Je bent een professionele vertaler. Vertaal de gegeven tekst naar het ${targetLanguage}. Je moet berichten vertalen in WhatsApp, en de context van de berichten is meestal autotransport. Geef alleen de vertaling terug, geen uitleg.`
+            content: `Je bent een professionele vertaler. Vertaal de gegeven tekst naar het ${targetLanguage}. 
+Je moet berichten vertalen in WhatsApp, en de context van de berichten is meestal autotransport.
+Geef alleen de vertaling terug, geen uitleg. `
           },
           {
             role: 'user',
@@ -332,18 +344,22 @@ class WhatsAppTranslator {
 
   async translateInput(targetLanguage) {
     const footer = document.querySelector('footer');
-    const inputField = footer?.querySelector('.selectable-text.copyable-text');
+    const inputField = footer?.querySelector('[contenteditable="true"]');
+
+		console.log('inputFieldinputFieldinputField', inputField)
     const translateBtn = footer?.querySelector('.input-translate-btn');
 
 
 		console.log(inputField)
     if (!inputField) return;
 
-    const originalText = inputField.textContent.trim();
+    const originalText = inputField.innerHTML.trim();
     if (!originalText) {
 			console.log('originalText', originalText)
 			return
 		};
+
+		console.log(originalText)
 
     translateBtn.innerHTML = '⏳';
     translateBtn.disabled = true;
@@ -494,6 +510,8 @@ class WhatsAppTranslator {
       cursor: text;
       min-height: 50px;
       color: #000;
+      white-space: break-spaces;
+
     `;
     translationDiv.textContent = 'Bezig met vertalen...';
 
@@ -537,9 +555,13 @@ class WhatsAppTranslator {
       translateBtn.disabled = true;
 
       try {
-        const translatedText = await this.callChatGPT(originalText, targetLanguage, apiKey);
 
-        // Show translation
+				console.log(originalText,'originalText')
+        // Parse HTML to clean text for translation
+        const cleanText = this.parseHTMLToText(originalText);
+        const translatedText = await this.callChatGPT(cleanText, targetLanguage, apiKey);
+
+        // Show translation as text
         translationDiv.textContent = translatedText;
         translationDiv.style.display = 'block';
 
@@ -599,7 +621,7 @@ class WhatsAppTranslator {
       user-select: text;
       cursor: text;
     `;
-    originalDiv.textContent = originalText;
+    originalDiv.innerHTML = originalText;
 
     originalSection.appendChild(summary);
     originalSection.appendChild(originalDiv);
@@ -618,9 +640,11 @@ class WhatsAppTranslator {
     // Automatically start translation
     (async () => {
       try {
-        const translatedText = await this.callChatGPT(originalText, targetLanguage, apiKey);
+        // Parse HTML to clean text for translation
+        const cleanText = this.parseHTMLToText(originalText);
+        const translatedText = await this.callChatGPT(cleanText, targetLanguage, apiKey);
 
-        // Show translation
+        // Show translation as text
         translationDiv.textContent = translatedText;
 
         // Show buttons
